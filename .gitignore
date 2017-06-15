@@ -1,0 +1,12 @@
+__pycache__/
+include
+lib
+bin
+pip-selfcheck.json
+*.swp
+.aux
+.blg
+.fdb_latexmk
+.fls
+.log
+.toc
