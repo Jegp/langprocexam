@@ -6,11 +6,13 @@
 \usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{filecontents}
+\usepackage{url}
+\usepackage{hyperref}
 \usepackage[paper=a4paper]{geometry}
 
 \newgeometry{top=1in,right=1.5in,left=1.5in}
 
-\title{Comparing regression and LSTM sentiment analysis models}
+\title{Sentiment analysis with linear regression and LSTM}
 
 \author{Language Processing II exam \\ Jens Egholm Pedersen \\ \texttt{xtp778@sc.ku.dk}}
 
@@ -38,7 +40,7 @@ from translation to recommender systems to generic personal assistants
 
 As a part of this development, sentiment analysis has been attracting increased
 attention \citep{BKL2009, Jurafsky2000}. Along with modern deep learning
-techniques, sentiment prediction models have have reached a higher precision
+techniques, sentiment prediction models have reached a higher precision
 than ever before \citep{Jurafsky2000, Schmidhuber2015}.
 Especially long short-term memory (LSTM) networks have shown staggering results
 within the field \citep{Schmidhuber2015}.
@@ -46,7 +48,7 @@ within the field \citep{Schmidhuber2015}.
 In the present paper a corpus of movie reviews presented by \cite{PangLee2005}
 is applied to four sentiment analysis models.
 Two of the models build on a simple linear regression model, while the other
-two employs modern LSTM techniques. The data is preprocessed using natural
+two employ modern LSTM techniques. The data is preprocessed using natural
 language processing tools and injected in the models with 4-fold cross
 validation.
 
@@ -70,10 +72,10 @@ of language understanding and translation \citep{Jurafsky2000}.
 There are several approaches to language processing, but it is common
 to deconstruct text into its constituents and assign meaning
 to each piece, with the hope that the disassembly gives additional meaning
-that can aggregates to an understanding of the text as a whole when the pieces
+that can aggregate to an understanding of the text as a whole, when the pieces
 are put back together \citep{Jurafsky2000}.
 \textit{Constituents} can range from morphemes to words to whole sentences in
-this context. This processes is referred to as feature extraction due to the
+this context. This process is referred to as feature extraction due to the
 enrichment of the text with meta-data.
 
 A fundamental method for feature extraction is to construct a probabilistic
@@ -86,7 +88,7 @@ likelihood of future occurrences \citep{Jurafsky2000}.
 Term frequency, inverse document frequency (tf-idf) is another relevant feature
 that describes the relevance of an item, weighted against the number of
 times it appears in other documents \citep{Jurafsky2000} (see figure \ref{fig:tfidf}).
-Tf-idf favors words that is used heavily in a
+Tf-idf favors words that are used heavily in a
 single document (assumed to be important) while diminishing the importance of
 words that often occur in other documents, and is a heavily used metric \citep{Jurafsky2000}.
 
@@ -112,7 +114,7 @@ grammatical categories.} \citep{Jurafsky2000}.
 
 Sentiment analysis focuses on extracting information about the emotions or
 opinions of a text \citep{PangLee2008}.
-Defining what a \textit{sentiment} is not a simple task, and have been
+Defining the word \textit{sentiment} is not a simple task, and has been
 scrutinized extensively \citep{Jurafsky2000, PangLee2008}.
 A much used approach was introduced by \cite{Ekman92} where he devised six
 basic emotions, which could be conveniently operationalized by computers.
@@ -129,7 +131,7 @@ the output, represented by a straight line in a 2-dimensional coordinate system
 \citep{Agresti2008}.
 
 \subsubsection{Error reporting}
-The predictions made by linear regression model ($y$), does not always fit
+The predictions made by a linear regression model ($y$) does not always fit
 the actual values ($ŷ$). To describe this error and to give indicators on the
 quality of the model, the mean absolute error (MAE) and root mean squared
 error (RMSE) is introduced \citep{Agresti2008, Chai2014}.
@@ -158,13 +160,13 @@ model accuracy, compared to other models \citep{Agresti2008, Chai2014}.
 \label{fig:rmse}
 \end{figure}
 
-Each metric should not stand alone however, and MAE and RMSE is typically
+Each metric should not stand alone however, and MAE and RMSE are typically
 reported together \citep{Chai2014}.
 
 \subsection{Neural networks}
 Inspired by the biological brain, models for neural networks have been applied
-in computer science the 1950s, and have become integral part of machine learning
- \citep{NILSSON2009, Russell2009}.
+in computer science since the 1950s, and have become integral part of machine
+learning \citep{NILSSON2009, Russell2009}.
 Neurons are essentially functions that operate on some input and respond with
 some output \citep{Russell2009}. The inputs for a neuron are weighted to give
 different input channels - or input dimensions - varying significance. These
@@ -172,7 +174,7 @@ weighted inputs arrive to an activation function that decides whether the
 neuron should ‘fire’ or not \citep{NILSSON2009}. Sigmoid or hyperbolic tangent
 are popular
 activation functions for numerical predictions because of their steep logistic
-properties while retaining differentiability. Neural networks excell by their
+properties while retaining differentiability. Neural networks excel in their
 adaptability and have long been applied to the field of language processing
 \citep{Jurafsky2000}.
 
@@ -205,18 +207,18 @@ properties \citep{Hochreiter1997}.
 \begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{lstm.png}
-  \caption{An \textit{peephole} LSTM unit with three gates (input, output and forget).}
+  \caption{A \textit{peephole} LSTM unit with three gates (input, output and forget).}
   \label{fig:lstm}
 \end{figure}
 
 The LSTM model seen in figure \ref{fig:lstm} builds on the idea of a more
 complex neuronal unit, with several \textit{gates}, collaborating to give
 the LSTM the desired property \citep{Gers2001}. A traditional unit contains
-three gates: an "input" gate that control the degree with which new information
+three gates: an "input" gate that controls the degree with which new information
 should influence the current memory state, a "forget" gate that decides whether
 a value should be retained and an output gate that decides how much influence
 the memory should have on the activation of the unit \citep{Hochreiter1997, Gers2001}.
-There are a plenitude of other architectures, but for this paper, the LSTM
+There are a plentitude of other architectures, but for this paper, the LSTM
 model shown in figure \ref{fig:lstm} is used \citep{Gers2001}.
 
 \subsubsection{Optimization and regularization}
@@ -251,7 +253,7 @@ and the deviation from the mean of the expected predictions.
 \section{Data generation}
 Following the theoretical background of the paper, this section zooms in on
 the prediction models and data set, while finally reporting on the results of
-testing the models againts the data.
+testing the models against the data.
 
 \subsection{Data set}
 \label{sec:dataset}
@@ -259,7 +261,7 @@ The data is a movie review corpus, where four reviewers rate movies in 5010
 reviews \citep{PangLee2005}. The ratings of each reviewer is aggregated
 to create three rating data sets: one with three categories,
 one with four categories and a discrete, normalized scale from 0 to 1. The aggregation
-were made with a technique called metric labelling, which attempts to take
+was made with a technique called metric labelling, which attempts to take
 label preference of reviewers into account, essentially controlling for more
 or less positive reviewers compared to the mean \citep{PangLee2005}. This method
 increases the external validity of each reviewer and gives a better basis
@@ -270,8 +272,8 @@ The main reason for this is firstly the increased granularity of the scale, givi
 more correct view of the aggregation of the different scale. Second, sticking
 to one scale rather than several makes it easier to compare results across
 models. A good accuracy in one model does not necessarily imply superiority
-over others, if the first model have fewer categories. Using a discrete scale
-makes it easier to report numerical measures and provide a more accurate
+over others, if the first model has fewer categories. Using a discrete scale
+makes it easier to report numerical measures and provides a more accurate
 picture of the pros and cons of each model.
 
 \subsection{Preprocessing}
@@ -362,7 +364,7 @@ of each word, which again is an opinionated source of data.
 
 Machine learning algorithms are known to require large amounts of data before
 it produces useful predictions \citep{Schmidhuber2015, Russell2009}. In the
-present data set there are only four reviewers. They produce over 5000 reviews,
+present data set there are only four reviewers. The set includes 5010 reviews,
 but the scores presented in figure \ref{fig:results} are based on a k-fold that
 excludes each reviewer. In particular the LSTM model would most likely perform
 better with a higher number of reviewers to train on.
@@ -371,8 +373,9 @@ The n-grams features ran into an unfortunate memory limitation, where only
 10'000 features could be evaluated at a time. Languages have a much higher
 degree of complexity, and removing this ceiling would certainly make the results
 more accurate.
+\vskip10pt
 
-Criticism aside the results are consistently within a small margin, indicating
+Criticism aside the results are consistent within a small margin, indicating
 that it might be hard to achieve much better results with the available data.
 Despite the difficulty of comparing opinionated data, this is an encouraging
 result. All else being equal, the best model is capable of approximating
@@ -395,7 +398,7 @@ Despite the weaknesses the two completely different models provided results
 that fell within a small margin, hinting at a dataset that might be hard to
 extract much more information from.
 
-There are a number of directions future work could go. It would first and
+There are a number of directions future work could explore. It would first and
 foremost be interesting to examine enrichment techniques through world-knowledge
 databases. In for instance the AFINN database, individual words are given a
 score to describe their positive or negative meaning \citep{IMM2011-06010}.
@@ -404,12 +407,19 @@ improving the predictability of a review. However, as discussed in section
 \ref{text:irony} these models does not always capture complex phenomenons like
 irony and are not freed from individual opinions.
 
+In relation to the individuality of the scores, it would most certainly be
+beneficial to work with a data set where the reviews were discrete to begin
+with. The methods used by \cite{PangLee2005} to normalize the data are
+commendable, but it would no doubt yield a higher external validity to ask
+the reviewers to use a more granular, discrete scale.
+
 Another feature extraction technique that have seen a surge in popularity is
 word2vec, where words are extracted into a multidimensional vector space
 \citep{Schmidhuber2015}.
-This opens up for interesting geometrical analyses because words can be seen as
-points in space. For instance the meaning of one word in relation to another
-can be expressed as the euclidean distance \citep{Russell2009, Schmidhuber2015}.
+This paves the way for interesting geometrical analyses because words can be seen as
+points in space. The meaning of one word in relation to another
+can for instance be expressed as the euclidean distance
+\citep{Russell2009, Schmidhuber2015}.
 
 Finally, it could be interesting to look into other LSTM type networks
 with a different unit design \citep{Schmidhuber2015} or perhaps even deep
@@ -433,7 +443,7 @@ self-introspection, which would provide a much stronger loss function heuristic
       keywords     = "word list, sentiment analysis, opinion mining, text mining",
       publisher    = "Informatics and Mathematical Modelling, Technical University of Denmark",
       address      = "Richard Petersens Plads, Building 321, {DK-}2800 Kgs. Lyngby",
-      url          = "http://www2.imm.dtu.dk/pubdb/p.php?6010",
+      url          = "http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010",
   },
   @book{Russell2009,
    author = {Russell, Stuart and Norvig, Peter},
