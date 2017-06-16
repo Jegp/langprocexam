@@ -1,0 +1,339 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{filecontents}
+
+\title{Comparing regression and LSTM sentiment analysis models}
+
+\author{Language Processing II exam \\ Jens Egholm Pedersen \\ \texttt{xtp778@sc.ku.dk}}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introduction}
+\label{sec:introduction}
+Due to the enormous rise in accessible data and processing capabilities,
+computers have been moving from the restricted formalized domain of
+mathematics and computability, and into the more complex and seemingly
+chaotic domain of natural language \citep{NILSSON2009, Jurafsky2000}. Automating
+understanding of natural language have a wide range of helpful applications,
+ranging from translation to recommender systems to generic personal assistants
+\citep{COX2005, BKL2009}.
+
+As a part of this development, sentiment analysis has been attracting increased
+attention \citep{BKL2009, Jurafsky2000}. In the present paper, sentiment
+analysis is applied to a corpus of movie reviews presented by \cite{PangLee2005}.
+By using standard natural
+language processing tools and machine learning techniques, four models are built
+and trained to predict the rating of a movie review on a discrete normalized scale.
+
+\section{Background}
+This section illuminates the theory and background for language processing
+and basic methodology for processing text.
+Sentiment analysis as a fundamental concept for this setting will be introduced
+second, followed by fundamental statistical metrics. Lastly,
+recurrent neural networks will be introduced before moving on to the data
+generation.
+
+\subsection{Language processing}
+Following the revolutionizing formalizations of grammar by \cite{Chomsky2002},
+first written in 1957, much work was put into working with the computability
+of language \citep{Jurafsky2000}. In the beginning of the 21st century,
+the previous work converged with the statistical machine learning community,
+giving rise to supervised, semi-supervised and even unsupervised models
+of language understanding and translation \citep{Jurafsky2000}.
+
+There are several approaches to language processing, but it is common
+to deconstruct text into its constituents and assign meaning
+to each piece, with the hope that the disassembly gives additional meaning
+that can aggregates to an understanding of the text as a whole when the pieces
+are put back together \citep{Jurafsky2000}.
+\textit{Constituents} can range from morphemes to words to whole sentences in
+this context. This processes is referred to as feature extraction due to the
+enrichment of the text with meta-data.
+
+A fundamental method for feature extraction is to construct a probabilistic
+model by simply joining items (ranging from phonemes to word pairs) together
+in pairs of one, two or more, called \textit{n}-grams \citep{Jurafsky2000}.
+The advantage of this approach focuses on speed and the simple, yet efficient,
+probabilites in for instance word pairs which can be applied to predict
+likehood of future occurences \citep{Jurafsky2000}.
+
+Term frequency, inverse document frequency (tf-idf) is another relevant feature
+that describes the relevance of an item, weighted against the number of
+times it appears in other documents \citep{Jurafsky2000} (see figure \ref{fig:tfidf}).
+Tf-idf favours words that is used heavily in a
+single document (assumed to be important) while diminishing the importance of
+words that often occur in other documents, and is a heavily used metric \citep{Jurafsky2000}.
+
+\begin{figure}
+\[tf-idf = Nw \cdot log(\frac{N}{k})\]
+\caption{Formula for tf-idf.}
+\label{fig:tfidf}
+\end{figure}
+
+\subsubsection{Sentiment analysis}
+Another popular approach for disassembling text
+called part of speech-tagging (POS tagging), assigns grammatical categories
+to each word and attempt to build a linguistic model that can be understood by
+a machine \citep{Jurafsky2000}. This works well for information retrieval,
+where objective truths can be extracted
+\footnote{Such as the objective statements about an object in the
+sentence "\textit{The cat likes tuna fish}".}, but fails
+to capture the complexity and emotional variety of sentences that appear
+outside the grammar
+\footnote{Such as a heavily sarcastic sentence like
+"\textit{I'd really truly love going out in this weather!}". For POS-tagging
+sarcasm is difficult to capture because it is not implicitly encoded in the
+grammatical categories.}
+, such as emotions and opinions \citep{Jurafsky2000}.
+
+Sentiment analysis focuses on extracting information about the emotions or
+opinions of a text \citep{PangLee2008}.
+Defining what a \textit{sentiment} is not a simple task, and have been
+scrutinized extensively \citep{Jurafsky2000, PangLee2008}.
+A much used approach was introduced by \cite{Ekman92} where he divised six
+basic emotions, which could be conveniently operationalized by computers.
+Since the dataset for this paper revolves around opinions in a single dimension,
+\textit{sentiment} will in this paper simply refer to a subjective experience,
+discretized to a number (see section \ref{sec:dataset}).
+
+
+\subsection{Linear regression}
+
+
+\subsubsection{Error reporting}
+Mean absolute error (MAE)
+Root mean square error (RMSE)
+
+\subsection{Recurrent neural networks}
+
+\section{Data generation}
+This section
+
+\subsection{Learning models}
+The four models model is built using the Scikit Learn (Sklearn) package and second
+is based on the deep learning library Keras (see appendix in section \ref{app:B}).
+Two The corpus is evaluated against four different implementations of
+sentiment analysis, based on two different models. The first model uses the
+
+\subsubsection{Data set}
+\label{sec:dataset}
+
+\subsubsection{K-fold cross validation}
+The dataset
+
+N-grams \cite{Jurafsky2000}.
+
+max features for bow (10'000)
+
+this section must
+report on actual test-runs utilizing the movie review corpus and applying at least two
+machine learning algorithms (Naïve-Bayes being one example)
+
+\begin{figure}
+  \begin{centering}
+    \begin{tabular}{ l c c c }
+      \textbf{Model} & \textbf{MAE} & \textbf{RMSE} \\ \hline
+      Linear & 0.1649 & 0.2075 \\
+      Linear + tf-idf & 0.1494 & 0.1855 \\
+      LSTM & 0.1667 & 0.2045 \\
+      LSTM + tf-idf & 0.1641 & 0.2014
+    \end{tabular}
+    \caption{Comparison of metrics for the four different models using mean absolute error (MAE) and root mean squared error (RMSE).}
+  \end{centering}
+\end{figure}
+
+\section{Quantitative evaluation}
+demonstrating how SA results can be evaluated
+automatically
+
+\section{Qualitative evaluation}
+evaluating and discussing the quantitative results wrt.
+validity, reliability and/or relevance in a “real
+-world” perspective
+
+The very definition of \textit{sentiment} in section \ref{ref:background} as
+a subjective opinion makes comparison difficult. As stated in \citep{PangLee2005}
+the entries in the present dataset is difficult to compare upon, since ratings
+are relative between reviewers; a rating of 0.8 might be high for one reviewer,
+but low for another. Unfortunately a simple normalization does not solve the
+problem because the scale of one reviewer might not even be linearly
+comparable to another.
+
+\subsection{Other approaches}
+Not taken
+AFINN, leksika
+word2vec
+\cite{IMM2011-06010}
+
+\section{Conclusion}
+presenting in a condensed form your results and observations, e.g.
+pointing to strengths, weaknesses, and future directions
+
+\clearpage% or cleardoublepage
+\renewcommand*{\refname}{}
+\section{References}
+
+\bibliographystyle{apalike}
+\bibliography{report}
+
+\begin{filecontents}{report.bib}
+  @MISC\{IMM2011-06010,
+      author       = "F. {\AA}. Nielsen",
+      title        = "AFINN",
+      year         = "2011",
+      month        = "mar",
+      keywords     = "word list, sentiment analysis, opinion mining, text mining",
+      publisher    = "Informatics and Mathematical Modelling, Technical University of Denmark",
+      address      = "Richard Petersens Plads, Building 321, {DK-}2800 Kgs. Lyngby",
+      url          = "http://www2.imm.dtu.dk/pubdb/p.php?6010",
+  },
+  @article{COX2005,
+    title = "Metacognition in computation: A selected research review",
+    journal = "Artificial Intelligence",
+    volume = "169",
+    number = "2",
+    pages = "104 - 141",
+    year = "2005",
+    note = "Special Review Issue",
+    issn = "0004-3702",
+    doi = "http://dx.doi.org/10.1016/j.artint.2005.10.009",
+    url = "http://www.sciencedirect.com/science/article/pii/S0004370205001530",
+    author = "Michael T. Cox"
+  },
+  @book{NILSSON2009,
+    author = "Nils J. Nilsson",
+    title = "The quest for artificial intelligence - A history of ideas and achievements",
+    year = "2009",
+    publisher = "Cambridge University Press"
+  },
+  @inproceedings{PangLee2005,
+    author = {Bo Pang and Lillian Lee},
+    title = {Seeing stars: Exploiting class relationships for sentiment categorization with respect to rating scales},
+    year = {2005},
+    pages = {115--124},
+    booktitle = {Proceedings of ACL}
+  },
+  @article{PangLee2008,
+    author = {Bo Pang and Lillian Lee},
+    title = "Opinion mining and sentiment analysis",
+    year = "2008",
+    journal = "Foundations and Trends in Information Retrieval",
+    volume = 2,
+    pages = {1-135}
+  }
+  @book{BKL2009,
+    added-at = {2016-12-06T16:29:36.000+0100},
+    address = {Beijing},
+    author = {Bird, Steven and Klein, Ewan and Loper, Edward},
+    biburl = {https://www.bibsonomy.org/bibtex/2c90dc59441d01c8bef58a947274164d4/flint63},
+    doi = {http://my.safaribooksonline.com/9780596516499},
+    file = {O'Reilly eBook:2009/BirdKleinLoper09.pdf:PDF;O'Reilly Product page:http\://shop.oreilly.com/product/9780596516499.do:URL;Related Web Site:http\://www.nltk.org/:URL},
+    groups = {public},
+    interhash = {5408d7da097b9cd81239c238da8bfaf4},
+    intrahash = {c90dc59441d01c8bef58a947274164d4},
+    isbn = {978-0-596-51649-9},
+    keywords = {01624 103 safari book ai software development language processing text python framework},
+    publisher = {O'Reilly},
+    timestamp = {2016-12-06T16:29:36.000+0100},
+    title = {Natural Language Processing with Python: Analyzing Text with the Natural Language Toolkit},
+    url = {http://www.nltk.org/book},
+    username = {flint63},
+    year = 2009
+  },
+  @book{Jurafsky2000,
+   author = {Jurafsky, Daniel and Martin, James H.},
+   title = {Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition},
+   year = {2000},
+   isbn = {0130950696},
+   edition = {1st},
+   publisher = {Prentice Hall PTR},
+   address = {Upper Saddle River, NJ, USA},
+  },
+  @article{Chai2014,
+     author = {Chai, T. and {Draxler}, R.~R.},
+      title = "{Root mean square error (RMSE) or mean absolute error (MAE)? - Arguments against avoiding RMSE in the literature}",
+    journal = {Geoscientific Model Development},
+       year = 2014,
+      month = jun,
+     volume = 7,
+      pages = {1247-1250},
+        doi = {10.5194/gmd-7-1247-2014},
+     adsurl = {http://adsabs.harvard.edu/abs/2014GMD.....7.1247C},
+    adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+  }.
+  @book{chomsky2002,
+    title={Syntactic Structures},
+    author={Chomsky, N.},
+    isbn={9783110172799},
+    lccn={2002043087},
+    series={Mouton classic},
+    url={https://books.google.dk/books?id=a6a\_b-CXYAkC},
+    year={2002},
+    publisher={Bod Third Party Titles}
+  },
+  @ARTICLE{Ekman92,
+    author = {Paul Ekman},
+    title = {An argument for basic emotions},
+    journal = {Cognition and Emotion},
+    year = {1992},
+    pages = {169--200}
+  }
+\end{filecontents}
+
+\pagebreak
+\section{Appendix A: Data}
+\label{app:A}
+The data used in this report is collected from \cite{PangLee2005}. The data
+is available in the software repository (see \ref{app:B}). The readme with
+further descriptions on the data source is available at:
+
+\url{http://www.cs.cornell.edu/people/pabo/movie-review-data/scaledata.README.1.0.txt}
+
+\pagebreak
+\section{Appendix B: Software}
+\label{app:B}
+
+All software used to produce the results presented in this report is open-source
+and available through GitHub at:
+
+\URL{https://github.com/Jegp/langprocexam}
+
+Below follows a list of the software used. An in-depth description on how
+to reproduce the results are availadle from the GitHub repository above.
+
+\subsection{NLTK}
+A toolkit for natural language processing in python. Visited 15th of June 2017.
+
+\URL{http://www.nltk.org/api/nltk.sentiment.html}
+
+\subsection{Scikit-learn}
+Machine learning library for Python. Visited 15th of June 2017.
+
+\URL{http://scikit-learn.org/stable/index.html}
+
+\subsection{Tensorflow}
+A machine learning library initially developed by Google Inc.
+Visited 15th of June 2017.
+
+\URL{https://www.tensorflow.org/}
+
+\subsection{Keras}
+A deep learning library which builds on top of Tensorflow.
+Visited 4th of June 2017.
+
+\URL{https://keras.io}
+
+
+\end{document}

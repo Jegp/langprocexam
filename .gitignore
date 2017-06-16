@@ -4,9 +4,11 @@ lib
 bin
 pip-selfcheck.json
 *.swp
-.aux
-.blg
-.fdb_latexmk
-.fls
-.log
-.toc
+*.aux
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.toc
+*.bbl
+*.gz
