@@ -32,24 +32,26 @@ Due to the enormous rise in accessible data and processing capabilities,
 computers have been moving from the restricted formalized domain of
 mathematics and computability, and into the more complex and seemingly
 chaotic domain of natural language \citep{NILSSON2009, Jurafsky2000}. Automating
-understanding of natural language have a wide range of helpful applications,
-ranging from translation to recommender systems to generic personal assistants
+understanding of natural language has a wide range of helpful applications,
+from translation to recommender systems to generic personal assistants
 \citep{COX2005, BKL2009}.
 
 As a part of this development, sentiment analysis has been attracting increased
-attention \citep{BKL2009, Jurafsky2000}. 
-%%%
-%%% TODO: Comment on why you chose linear + NN
-%%% Recent advancement in LSTM networks... Used in Google etc.
-%%%
+attention \citep{BKL2009, Jurafsky2000}. Along with modern deep learning
+techniques, sentiment prediction models have have reached a higher precision
+than ever before \citep{Jurafsky2000, Schmidhuber2015}.
+Especially long short-term memory (LSTM) networks have shown staggering results
+within the field \citep{Schmidhuber2015}.
 
-In the present paper, sentiment
-analysis is applied to a corpus of movie reviews presented by \cite{PangLee2005}.
-By using standard natural
-language processing tools and machine learning techniques, four models are built
-and trained to predict the rating of a movie review on a discrete normalized scale.
+In the present paper a corpus of movie reviews presented by \cite{PangLee2005}
+is applied to four sentiment analysis models.
+Two of the models build on a simple linear regression model, while the other
+two employs modern LSTM techniques. The data is preprocessed using natural
+language processing tools and injected in the models with 4-fold cross
+validation.
 
 \section{Background}
+\label{sec:background}
 This section illuminates the theory and background for language processing
 and basic methodology for processing text.
 Sentiment analysis as a fundamental concept for this setting will be introduced
@@ -350,7 +352,7 @@ the linear model with added tf-idf scores, the results show that the linear
 tf-idf model has the best predictive abilities.
 
 \section{Qualitative evaluation}
-The very definition of \textit{sentiment} in section \ref{ref:background} as
+The very definition of \textit{sentiment} in section \ref{sec:background} as
 a subjective opinion makes comparison difficult. The effort presented by
 \cite{PangLee2005} to normalize this across reviewers is commendable, but it
 is difficult to measure their success. The paper introduces the idea of a positive
@@ -407,13 +409,13 @@ word2vec, where words are extracted into a multidimensional vector space
 \citep{Schmidhuber2015}.
 This opens up for interesting geometrical analyses because words can be seen as
 points in space. For instance the meaning of one word in relation to another
-can be expressed as the euclidean distance \citep{Russell2014, Schmidhuber2015}.
+can be expressed as the euclidean distance \citep{Russell2009, Schmidhuber2015}.
 
 Finally, it could be interesting to look into other LSTM type networks
 with a different unit design \citep{Schmidhuber2015} or perhaps even deep
 learning techniques like meta-cognitive representations capable of
 self-introspection, which would provide a much stronger loss function heuristic
-\citep{Cox2005}.
+\citep{COX2005}.
 
 \clearpage
 \renewcommand*{\refname}{}
