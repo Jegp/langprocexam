@@ -72,13 +72,13 @@ A fundamental method for feature extraction is to construct a probabilistic
 model by simply joining items (ranging from phonemes to word pairs) together
 in pairs of one, two or more, called \textit{n}-grams \citep{Jurafsky2000}.
 The advantage of this approach focuses on speed and the simple, yet efficient,
-probabilites in for instance word pairs which can be applied to predict
-likehood of future occurences \citep{Jurafsky2000}.
+probabilities in for instance word pairs which can be applied to predict
+likelihood of future occurrences \citep{Jurafsky2000}.
 
 Term frequency, inverse document frequency (tf-idf) is another relevant feature
 that describes the relevance of an item, weighted against the number of
 times it appears in other documents \citep{Jurafsky2000} (see figure \ref{fig:tfidf}).
-Tf-idf favours words that is used heavily in a
+Tf-idf favors words that is used heavily in a
 single document (assumed to be important) while diminishing the importance of
 words that often occur in other documents, and is a heavily used metric \citep{Jurafsky2000}.
 
@@ -100,12 +100,13 @@ outside the grammar, such as emotions and opinions\footnote{One example is a hea
 "\textit{I'd really truly love going out in this weather!}". For POS-tagging
 sarcasm is difficult to capture because it is not implicitly encoded in the
 grammatical categories.} \citep{Jurafsky2000}.
+\label{text:irony}
 
 Sentiment analysis focuses on extracting information about the emotions or
 opinions of a text \citep{PangLee2008}.
 Defining what a \textit{sentiment} is not a simple task, and have been
 scrutinized extensively \citep{Jurafsky2000, PangLee2008}.
-A much used approach was introduced by \cite{Ekman92} where he divised six
+A much used approach was introduced by \cite{Ekman92} where he devised six
 basic emotions, which could be conveniently operationalized by computers.
 Since the dataset for this paper revolves around opinions in a single dimension,
 \textit{sentiment} will in this paper simply refer to a subjective experience,
@@ -137,8 +138,8 @@ predicted value is 1. The bigger the mean error value, the worse the model is.
 
 However, this figure does not capture the error distribution of the model
 \citep{Chai2014}. If
-a gaussian distribution is assumed for the errors, it is important to know
-the standard distribution to indicate \textit{how} consistenly wrong the model
+a Gaussian distribution is assumed for the errors, it is important to know
+the standard distribution to indicate \textit{how} consistently wrong the model
 is \citep{Agresti2008}. The root mean square error measures the standard
 deviation in the sample of the errors, making it a good description for the
 model accuracy, compared to other models \citep{Agresti2008, Chai2014}.
@@ -207,102 +208,208 @@ three gates: an "input" gate that control the degree with which new information
 should influence the current memory state, a "forget" gate that decides whether
 a value should be retained and an output gate that decides how much influence
 the memory should have on the activation of the unit \citep{Hochreiter1997, Gers2001}.
-There are a plentitude of other architectures, but for this paper, the LSTM
+There are a plenitude of other architectures, but for this paper, the LSTM
 model shown in figure \ref{fig:lstm} is used \citep{Gers2001}.
 
-\subsubsection{Optimisation and regularization}
+\subsubsection{Optimization and regularization}
 Recurrent neural networks are typically trained with a continuously applied
-loss function and gradiend descent for weight correction \citep{Russell2014,
-Hochreiter1997, Schmidhubner2015}. Stochastic gradiens descent and resilient
+loss function and gradient descent for weight correction \citep{Russell2009,
+Hochreiter1997, Schmidhuber2015}. Stochastic gradient descent and resilient
 back-propagation are two common approaches, which have proved efficient
-\citep{Russell2014, NILSSON2009}. This paper applies a third method, based on
+\citep{Russell2009, NILSSON2009}. This paper applies a third method, based on
 the RMSE algorithm in figure \ref{fig:rmse}, called root mean square propagation
 (RMSprop), which preserves the stochastic properties while controlling
 for previous errors in the network \citep{Tieleman2012}.
 
 LSTMs and machine learning models in general can overfit to the data
 they are trained on, loosing their ability to predict data outside the training
-set \citep{Russell2014, NILSSON2009}.
+set \citep{Russell2009, NILSSON2009}.
 A common approach to avoid overfitting is to introduce additional
 information in the learning process, so the model gets sufficiently confused
 to lose any overfitted optimizations, but sufficiently focused to only save
-the relevant parameters \citep{Schmidhubner2015, NILSSON2009}. For LSTM networks
+the relevant parameters \citep{Schmidhuber2015, NILSSON2009}. For LSTM networks
 a common approach is simply to set a random part of the data to zero
-\citep{Schmidhubner2015}. This type of data dropout is applied later in the
+\citep{Schmidhuber2015}. This type of data dropout is applied later in the
 paper.
 
 \subsubsection{Error reporting}
 Similar to the linear regression model, the LSTMs are predicting a numerical
 value (see \ref{sec:dataset}). For this type of prognoses MAE and RMSE are
 commonly used as indicators of the model accuracy
-\citep{Russel2014, NILSSON2009, Schmidhubner2015}. As with the linear model,
+\citep{Russell2009, NILSSON2009, Schmidhuber2015}. As with the linear model,
 they are capable of capturing both the average error in absolute terms,
 and the deviation from the mean of the expected predictions.
 
 \section{Data generation}
+Following the theoretical background of the paper, this section zooms in on
+the prediction models and data set, while finally reporting on the results of
+testing the models againts the data.
 
-\subsubsection{Data set}
+\subsection{Data set}
 \label{sec:dataset}
-Chose to focus on ratings
+The data is a movie review corpus, where four reviewers rate movies in 5010
+reviews \citep{PangLee2005}. The ratings of each reviewer is aggregated
+to create three rating data sets: one with three categories,
+one with four categories and a discrete, normalized scale from 0 to 1. The aggregation
+were made with a technique called metric labelling, which attempts to take
+label preference of reviewers into account, essentially controlling for more
+or less positive reviewers compared to the mean \citep{PangLee2005}. This method
+increases the external validity of each reviewer and gives a better basis
+for comparison.
 
-\subsection{Learning models}
-The four models model is built using the Scikit Learn (Sklearn) package and second
-is based on the deep learning library Keras (see appendix in section \ref{app:B}).
-Two The corpus is evaluated against four different implementations of
-sentiment analysis, based on two different models. The first model uses the
+Of the three different scales this paper concentrates on the discrete ratings.
+The main reason for this is firstly the increased granularity of the scale, giving a
+more correct view of the aggregation of the different scale. Second, sticking
+to one scale rather than several makes it easier to compare results across
+models. A good accuracy in one model does not necessarily imply superiority
+over others, if the first model have fewer categories. Using a discrete scale
+makes it easier to report numerical measures and provide a more accurate
+picture of the pros and cons of each model.
 
-\subsubsection{K-fold cross validation}
-The dataset
+\subsection{Preprocessing}
+During the preprocessing step the data was split into a training and a test
+set using k-fold cross validation \citep{Russell2009}. To ensure that the
+model does not overfit to a single review author, the k-fold was done once
+per reviewer, each time excluding one reviewer. This resulted in a 4-fold split
+where each split completely excludes one of the four reviewers. Each test
+performed on the data is thus done on a single reviewer the model has not
+seen before in the training step.
 
-N-grams \cite{Jurafsky2000}.
+Lastly the data was split into text as the input values ($x$) and ratings
+as the output values ($y$) and compressed to a file for the next processing
+step (see appendix B).
 
-max features for bow (10'000)
+\subsection{Prediction models}
+To process the data two types of models were built: one with Scikit Learn
+Sklearn) and one with the deep learning library Keras (see appendix B).
+These two types represent a simple linear baseline, and a more advanced
+adaptive machine learning approach.
 
-this section must
-report on actual test-runs utilizing the movie review corpus and applying at least two
-machine learning algorithms (Naïve-Bayes being one example)
+For each of the model types the impact of using tf-idf is examined by creating
+two implementations: one using the tf-idf algorithm and one without. This
+results in four models in total that can be compared within the same type
+(using tf-idf or not) and between types.
+
+All four models are based on bi- tri- four- and five-grams (2-5),
+created before the tf-idf process \cite{Jurafsky2000}. Unfortunately the
+maximum number of features for the n-grams was restricted to 10'000 due to
+memory limitations.
+
+For the LSTM models, a pipeline was constructed with 64 LSTM units, a dropout
+rate of 50\% and finally a single neuron neural network with a sigmoid
+activation function to provide the single-dimensional rating value. The
+model was optimized using RMSprop and each model was given 8 run-throughs to
+train the network.
+
+The source code for the models are available in appendix B.
+
+\subsection{Model evaluation}
+The results are presented in figure \ref{fig:results}.
+Each model was run four times (once for each k-fold split), and
+the reported metrics are the result of averaging the MAE and RMSE metrics over
+the four iterations.
 
 \begin{figure}
   \begin{centering}
     \begin{tabular}{ l c c c }
-      \textbf{Model} & \textbf{r\textsuperscript{2}} & \textbf{MAE} & \textbf{RMSE} \\ \hline
-      Linear          & 0   & 0.1649 & 0.2075 \\
-      Linear + tf-idf & 0   & 0.1494 & 0.1855 \\
-      LSTM            & N/A & 0.1667 & 0.2045 \\
-      LSTM + tf-idf   & N/A & 0.1641 & 0.2014
+      \textbf{Model} & \textbf{MAE} & \textbf{RMSE} \\ \hline
+      Linear          & 0.1649 & 0.2075 \\
+      Linear + tf-idf & 0.1494 & 0.1855 \\
+      LSTM            & 0.1667 & 0.2045 \\
+      LSTM + tf-idf   & 0.1641 & 0.2014
     \end{tabular}
-    \caption{Comparison of metrics for the four different models using mean absolute error (MAE) and root mean squared error (RMSE).}
+    \caption{Comparison of the MAE and RMSE for the four different models.}
+    \label{fig:results}
   \end{centering}
 \end{figure}
 
 \section{Quantitative evaluation}
-demonstrating how SA results can be evaluated
-automatically
+The results for the LSTM model are slightly worse than the linear. With a MAE
+of .1667, the LSTM model improves to .1641 with tf-idf scores. That is,
+on average the model misses with either .1641 too high or too low on the
+rating scale. The average error margin is then .3282. Taking into consideration
+that the scale ranges from 0 to 1, .3282 is a high number.
+In comparison the MAE of the linear model begins with .1649 and improves to
+.1494.
+
+The RMSE is also less in the linear model, dropping to .1855 with tf-idf scores.
+This points to a lower error standard deviation, meaning that the predictions
+falls closer to the mean than the other three models.
+
+For all four models the MAE scores are within a small margin between .1494 and
+.1667. Similarly the RMSE values are within a minuscule interval of .078.
+
+With a small difference in the MAE of ~0.015 between the LSTM tf-idf model and
+the linear model with added tf-idf scores, the results show that the linear
+tf-idf model has the best predictive abilities.
 
 \section{Qualitative evaluation}
-evaluating and discussing the quantitative results wrt.
-validity, reliability and/or relevance in a “real
--world” perspective
-
 The very definition of \textit{sentiment} in section \ref{ref:background} as
-a subjective opinion makes comparison difficult. As stated in \citep{PangLee2005}
-the entries in the present dataset is difficult to compare upon, since ratings
-are relative between reviewers; a rating of 0.8 might be high for one reviewer,
-but low for another. Unfortunately a simple normalization does not solve the
-problem because the scale of one reviewer might not even be linearly
-comparable to another.
+a subjective opinion makes comparison difficult. The effort presented by
+\cite{PangLee2005} to normalize this across reviewers is commendable, but it
+is difficult to measure their success. The paper introduces the idea of a positive
+sentence percentage (PSP), which is used to evaluate how positive a sentence
+is based on the positive words in it. Such a method requires a positivity value
+of each word, which again is an opinionated source of data.
 
-\subsection{Other approaches}
-Not taken
-AFINN, leksika
-word2vec
-\cite{IMM2011-06010}
+Machine learning algorithms are known to require large amounts of data before
+it produces useful predictions \citep{Schmidhuber2015, Russell2009}. In the
+present data set there are only four reviewers. They produce over 5000 reviews,
+but the scores presented in figure \ref{fig:results} are based on a k-fold that
+excludes each reviewer. In particular the LSTM model would most likely perform
+better with a higher number of reviewers to train on.
+
+The n-grams features ran into an unfortunate memory limitation, where only
+10'000 features could be evaluated at a time. Languages have a much higher
+degree of complexity, and removing this ceiling would certainly make the results
+more accurate.
+
+Criticism aside the results are consistently within a small margin, indicating
+that it might be hard to achieve much better results with the available data.
+Despite the difficulty of comparing opinionated data, this is an encouraging
+result. All else being equal, the best model is capable of approximating
+the opinion of a piece of text on a linear scale. This would surely be easier
+for categorical values, but the discrete scale contains more information and
+is easier to generalize to other contexts.
 
 \section{Conclusion}
-presenting in a condensed form your results and observations, e.g.
-pointing to strengths, weaknesses, and future directions
+Using a dataset of 5010 movie reviews from four reviewers this paper applied
+four sentiment analysis models, based on linear regression and LSTM
+machine learning, to predict the ratings of the movie reviews.
+While the LSTM models were close to the performance of the linear models,
+the linear models proved superior.
 
-\clearpage% or cleardoublepage
+It was concluded that the LSTM model might suffer from the small amount of
+reviewers, and that future work will have to be done on a larger machine with
+more memory.
+
+Despite the weaknesses the two completely different models provided results
+that fell within a small margin, hinting at a dataset that might be hard to
+extract much more information from.
+
+There are a number of directions future work could go. It would first and
+foremost be interesting to examine enrichment techniques through world-knowledge
+databases. In for instance the AFINN database, individual words are given a
+score to describe their positive or negative meaning \citep{IMM2011-06010}.
+This addition allows the models to improve the input word by word, possibly
+improving the predictability of a review. However, as discussed in section
+\ref{text:irony} these models does not always capture complex phenomenons like
+irony and are not freed from individual opinions.
+
+Another feature extraction technique that have seen a surge in popularity is
+word2vec, where words are extracted into a multidimensional vector space
+\citep{Schmidhuber2015}.
+This opens up for interesting geometrical analyses because words can be seen as
+points in space. For instance the meaning of one word in relation to another
+can be expressed as the euclidean distance \citep{Russell2014, Schmidhuber2015}.
+
+Finally, it could be interesting to look into other LSTM type networks
+with a different unit design \citep{Schmidhuber2015} or perhaps even deep
+learning techniques like meta-cognitive representations capable of
+self-introspection, which would provide a much stronger loss function heuristic
+\citep{Cox2005}.
+
+\clearpage
 \renewcommand*{\refname}{}
 \section{References}
 
@@ -500,25 +607,28 @@ pointing to strengths, weaknesses, and future directions
 \end{filecontents}
 
 \pagebreak
-\section{Appendix A: Data}
+\section{Appendix A: Data and preprocessing}
 \label{app:A}
 The data used in this report is collected from \cite{PangLee2005}. The data
-is available in the software repository (see \ref{app:B}). The readme with
-further descriptions on the data source is available at:
+is available in the software repository referenced in appendix B.
+
+A readme file with an in-depth description on the data source is available at:
 
 \url{http://www.cs.cornell.edu/people/pabo/movie-review-data/scaledata.README.1.0.txt}
 
 \pagebreak
 \section{Appendix B: Software}
 \label{app:B}
-
-All software used to produce the results presented in this report is open-source
-and available through GitHub at:
+The data preprocessing, model building and model evaluation was done using
+Python 3.
+All software presented in this report is open-source and available through
+GitHub, along with an in-depth readme file on how
+to reproduce the results:
 
 \URL{https://github.com/Jegp/langprocexam}
 
-Below follows a list of the software used. An in-depth description on how
-to reproduce the results are availadle from the GitHub repository above.
+Below follows a list of external software packages and frameworks used in
+the project.
 
 \subsection{NLTK}
 A toolkit for natural language processing in python. Visited 15th of June 2017.
