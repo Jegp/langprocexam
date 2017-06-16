@@ -31,7 +31,13 @@ ranging from translation to recommender systems to generic personal assistants
 \citep{COX2005, BKL2009}.
 
 As a part of this development, sentiment analysis has been attracting increased
-attention \citep{BKL2009, Jurafsky2000}. In the present paper, sentiment
+attention \citep{BKL2009, Jurafsky2000}.
+%%%
+%%% TODO: Comment on why you chose linear + NN
+%%% Recent advancement in LSTM networks... Used in Google etc.
+%%%
+
+In the present paper, sentiment
 analysis is applied to a corpus of movie reviews presented by \cite{PangLee2005}.
 By using standard natural
 language processing tools and machine learning techniques, four models are built
@@ -87,16 +93,13 @@ Another popular approach for disassembling text
 called part of speech-tagging (POS tagging), assigns grammatical categories
 to each word and attempt to build a linguistic model that can be understood by
 a machine \citep{Jurafsky2000}. This works well for information retrieval,
-where objective truths can be extracted
-\footnote{Such as the objective statements about an object in the
+where objective truths can be extracted\footnote{Such as the objective statements about an object in the
 sentence "\textit{The cat likes tuna fish}".}, but fails
 to capture the complexity and emotional variety of sentences that appear
-outside the grammar
-\footnote{Such as a heavily sarcastic sentence like
+outside the grammar, such as emotions and opinions\footnote{One example is a heavily sarcastic sentence like
 "\textit{I'd really truly love going out in this weather!}". For POS-tagging
 sarcasm is difficult to capture because it is not implicitly encoded in the
-grammatical categories.}
-, such as emotions and opinions \citep{Jurafsky2000}.
+grammatical categories.} \citep{Jurafsky2000}.
 
 Sentiment analysis focuses on extracting information about the emotions or
 opinions of a text \citep{PangLee2008}.
@@ -108,27 +111,145 @@ Since the dataset for this paper revolves around opinions in a single dimension,
 \textit{sentiment} will in this paper simply refer to a subjective experience,
 discretized to a number (see section \ref{sec:dataset}).
 
-
 \subsection{Linear regression}
-
+Linear regression is a mathematical function that describes how the mean of the
+output changes with the value of the input \citep{Agresti2008}. The model is
+appropriate when a linear correlation between the input and output can be
+assumed, so an increase in the input results in a linear in- or decrease in
+the output, represented by a straight line in a 2-dimensional coordinate system
+\citep{Agresti2008}.
 
 \subsubsection{Error reporting}
-Mean absolute error (MAE)
-Root mean square error (RMSE)
+The predictions made by linear regression model ($y$), does not always fit
+the actual values ($ŷ$). To describe this error and to give indicators on the
+quality of the model, the mean absolute error (MAE) and root mean squared
+error (RMSE) is introduced \citep{Agresti2008, Chai2014}.
 
-\subsection{Recurrent neural networks}
+MAE in figure \ref{fig:mae} describes the mean of the absolute error values.
+If a model has an MAE of 1, the average distance to the actual value from the
+predicted value is 1. The bigger the mean error value, the worse the model is.
+
+\begin{figure}
+\[MAE = \frac{\Sigma |e|}{n}, e = y - ŷ\]
+\caption{Mean absolute error (MAE).}
+\label{fig:mae}
+\end{figure}
+
+However, this figure does not capture the error distribution of the model
+\citep{Chai2014}. If
+a gaussian distribution is assumed for the errors, it is important to know
+the standard distribution to indicate \textit{how} consistenly wrong the model
+is \citep{Agresti2008}. The root mean square error measures the standard
+deviation in the sample of the errors, making it a good description for the
+model accuracy, compared to other models \citep{Agresti2008, Chai2014}.
+
+\begin{figure}
+\[ RMSE = \sqrt{\frac{\Sigma (e)^{2}}{n - 2}}, e = y - ŷ \]
+\caption{Root mean square error (RMSE).}
+\label{fig:rmse}
+\end{figure}
+
+Each metric should not stand alone however, and MAE and RMSE is typically
+reported together \citep{Chai2014}.
+
+\subsection{Neural networks}
+Inspired by the biological brain, models for neural networks have been applied
+in computer science the 1950s, and have become integral part of machine learning
+ \citep{NILSSON2009, Russell2009}.
+Neurons are essentially functions that operate on some input and respond with
+some output \citep{Russell2009}. The inputs for a neuron are weighted to give
+different input channels - or input dimensions - varying significance. These
+weighted inputs arrive to an activation function that decides whether the
+neuron should ‘fire’ or not \citep{NILSSON2009}. Sigmoid or hyperbolic tangent
+are popular
+activation functions for numerical predictions because of their steep logistic
+properties while retaining differentiability. Neural networks excell by their
+adaptability and have long been applied to the field of language processing
+\citep{Jurafsky2000}.
+
+Simple neural networks can be stacked in layers, where each neuron will assign
+weights to the input, to determine its significance for the activation function
+\citep{NILSSON2009}. By tuning the weights of the neurons, such groupings can
+learn to fire on certain input patterns \citep{Russell2009}. However,
+this structure have proved brittle and difficult to train because the
+neurons do not retain their weights for long \citep{NILSSON2009, Russell2009}.
+\cite{Rumelhart1988} suggested a method to avoid this instability by adjusting
+the weights of the neurons in retrospect with a method called back-propagation
+\citep{Rumelhart1988, NILSSON2009}. This optimization is
+operationalized by a function that can describe the \textit{loss} of effiency
+in a network, and then adjust the weights correspondingly using gradient
+descent \citep{Russell2009}.
+
+\subsubsection{Long short-term memory networks}
+Back-propagating networks with a high complexity in layers and neurons have
+shown to be hard to optimize above a certain point, because the gradient
+descent algorithm are inefficient at escaping local extrema in a high-dimensional
+space \citep{Russell2009}. Recurrence have been used to counter this problem,
+by conserving \emdash or returning to \emdash previous, optimal values
+\citep{Schmidhuber2015, Russell2009}. \cite{Hochreiter1997} suggested a certain
+type of memory-retaining networks that is able to balance between both
+storing previous optimal state, while also forgetting context when new and
+different input arrives \citep{Hochreiter1997, Schmidhuber2015}.
+They dubbed the model long short-term memory (LSTM) networks, to capture both
+properties \citep{Hochreiter1997}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{lstm.png}
+  \caption{An \textit{peephole} LSTM unit with three gates (input, output and forget).}
+  \label{fig:lstm}
+\end{figure}
+
+The LSTM model seen in figure \ref{fig:lstm} builds on the idea of a more
+complex neuronal unit, with several \textit{gates}, collaborating to give
+the LSTM the desired property \citep{Gers2001}. A traditional unit contains
+three gates: an "input" gate that control the degree with which new information
+should influence the current memory state, a "forget" gate that decides whether
+a value should be retained and an output gate that decides how much influence
+the memory should have on the activation of the unit \citep{Hochreiter1997, Gers2001}.
+There are a plentitude of other architectures, but for this paper, the LSTM
+model shown in figure \ref{fig:lstm} is used \citep{Gers2001}.
+
+\subsubsection{Optimisation and regularization}
+Recurrent neural networks are typically trained with a continuously applied
+loss function and gradiend descent for weight correction \citep{Russell2014,
+Hochreiter1997, Schmidhubner2015}. Stochastic gradiens descent and resilient
+back-propagation are two common approaches, which have proved efficient
+\citep{Russell2014, NILSSON2009}. This paper applies a third method, based on
+the RMSE algorithm in figure \ref{fig:rmse}, called root mean square propagation
+(RMSprop), which preserves the stochastic properties while controlling
+for previous errors in the network \citep{Tieleman2012}.
+
+LSTMs and machine learning models in general can overfit to the data
+they are trained on, loosing their ability to predict data outside the training
+set \citep{Russell2014, NILSSON2009}.
+A common approach to avoid overfitting is to introduce additional
+information in the learning process, so the model gets sufficiently confused
+to lose any overfitted optimizations, but sufficiently focused to only save
+the relevant parameters \citep{Schmidhubner2015, NILSSON2009}. For LSTM networks
+a common approach is simply to set a random part of the data to zero
+\citep{Schmidhubner2015}. This type of data dropout is applied later in the
+paper.
+
+\subsubsection{Error reporting}
+Similar to the linear regression model, the LSTMs are predicting a numerical
+value (see \ref{sec:dataset}). For this type of prognoses MAE and RMSE are
+commonly used as indicators of the model accuracy
+\citep{Russel2014, NILSSON2009, Schmidhubner2015}. As with the linear model,
+they are capable of capturing both the average error in absolute terms,
+and the deviation from the mean of the expected predictions.
 
 \section{Data generation}
-This section
+
+\subsubsection{Data set}
+\label{sec:dataset}
+Chose to focus on ratings
 
 \subsection{Learning models}
 The four models model is built using the Scikit Learn (Sklearn) package and second
 is based on the deep learning library Keras (see appendix in section \ref{app:B}).
 Two The corpus is evaluated against four different implementations of
 sentiment analysis, based on two different models. The first model uses the
-
-\subsubsection{Data set}
-\label{sec:dataset}
 
 \subsubsection{K-fold cross validation}
 The dataset
@@ -144,11 +265,11 @@ machine learning algorithms (Naïve-Bayes being one example)
 \begin{figure}
   \begin{centering}
     \begin{tabular}{ l c c c }
-      \textbf{Model} & \textbf{MAE} & \textbf{RMSE} \\ \hline
-      Linear & 0.1649 & 0.2075 \\
-      Linear + tf-idf & 0.1494 & 0.1855 \\
-      LSTM & 0.1667 & 0.2045 \\
-      LSTM + tf-idf & 0.1641 & 0.2014
+      \textbf{Model} & \textbf{r\textsuperscript{2}} & \textbf{MAE} & \textbf{RMSE} \\ \hline
+      Linear          & 0   & 0.1649 & 0.2075 \\
+      Linear + tf-idf & 0   & 0.1494 & 0.1855 \\
+      LSTM            & N/A & 0.1667 & 0.2045 \\
+      LSTM + tf-idf   & N/A & 0.1641 & 0.2014
     \end{tabular}
     \caption{Comparison of metrics for the four different models using mean absolute error (MAE) and root mean squared error (RMSE).}
   \end{centering}
@@ -198,6 +319,29 @@ pointing to strengths, weaknesses, and future directions
       publisher    = "Informatics and Mathematical Modelling, Technical University of Denmark",
       address      = "Richard Petersens Plads, Building 321, {DK-}2800 Kgs. Lyngby",
       url          = "http://www2.imm.dtu.dk/pubdb/p.php?6010",
+  },
+  @book{Russell2009,
+   author = {Russell, Stuart and Norvig, Peter},
+   title = {Artificial Intelligence: A Modern Approach},
+   year = {2009},
+   isbn = {0136042597, 9780136042594},
+   edition = {3rd},
+   publisher = {Prentice Hall Press},
+   address = {Upper Saddle River, NJ, USA},
+  },
+  @incollection{Rumelhart1988,
+   author = {Rumelhart, David E. and Hinton, Geoffrey E. and Williams, Ronald J.},
+   chapter = {Learning Representations by Back-propagating Errors},
+   title = {Neurocomputing: Foundations of Research},
+   editor = {Anderson, James A. and Rosenfeld, Edward},
+   year = {1988},
+   isbn = {0-262-01097-6},
+   pages = {696--699},
+   numpages = {4},
+   url = {http://dl.acm.org/citation.cfm?id=65669.104451},
+   acmid = {104451},
+   publisher = {MIT Press},
+   address = {Cambridge, MA, USA},
   },
   @article{COX2005,
     title = "Metacognition in computation: A selected research review",
@@ -252,6 +396,29 @@ pointing to strengths, weaknesses, and future directions
     username = {flint63},
     year = 2009
   },
+  @MISC{Gers2001,
+      author = {Felix Gers},
+      title = {Long Short-Term Memory in Recurrent Neural Networks},
+      year = {2001}
+  },
+  @article{Hochreiter1997,
+    author = {Hochreiter, Sepp and Schmidhuber, J\"{u}rgen},
+    title = {Long Short-Term Memory},
+    journal = {Neural Comput.},
+    issue_date = {November 15, 1997},
+    volume = {9},
+    number = {8},
+    month = nov,
+    year = {1997},
+    issn = {0899-7667},
+    pages = {1735--1780},
+    numpages = {46},
+    url = {http://dx.doi.org/10.1162/neco.1997.9.8.1735},
+    doi = {10.1162/neco.1997.9.8.1735},
+    acmid = {1246450},
+    publisher = {MIT Press},
+    address = {Cambridge, MA, USA},
+  },
   @book{Jurafsky2000,
    author = {Jurafsky, Daniel and Martin, James H.},
    title = {Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition},
@@ -289,6 +456,46 @@ pointing to strengths, weaknesses, and future directions
     journal = {Cognition and Emotion},
     year = {1992},
     pages = {169--200}
+  },
+  @book{Agresti2008,
+    author = {Agresti, Alan and Finlay, Barbara},
+    citeulike-article-id = {5485960},
+    day = {07},
+    edition = {4},
+    howpublished = {Hardcover},
+    isbn = {0130272957},
+    keywords = {methodology, quantitative, statistics},
+    month = jan,
+    posted-at = {2009-08-19 11:15:48},
+    priority = {2},
+    publisher = {Prentice Hall},
+    title = {{Statistical Methods for the Social Sciences (4th Edition)}},
+    url = {http://www.amazon.com/exec/obidos/redirect?tag=citeulike07-20\&path=ASIN/0130272957},
+    year = {2008}
+  },
+  @article{Schmidhuber2015,
+    title = "Deep learning in neural networks: An overview ",
+    journal = "Neural Networks ",
+    volume = "61",
+    number = "",
+    pages = "85 - 117",
+    year = "2015",
+    note = "",
+    issn = "0893-6080",
+    doi = "https://doi.org/10.1016/j.neunet.2014.09.003",
+    url = "http://www.sciencedirect.com/science/article/pii/S0893608014002135",
+    author = "Jürgen Schmidhuber",
+    keywords = "Deep learning",
+    keywords = "Supervised learning",
+    keywords = "Unsupervised learning",
+    keywords = "Reinforcement learning",
+    keywords = "Evolutionary computation "
+  }.
+  @other{Tieleman2012,
+    author = {Tieleman, Tijmen and Hinton, Geoffrey},
+    title = "Lecture 6.5-rmsprop: Divide the gradient by a running average of its recent magnitude",
+    publisher = "Coursera: Neural Networks for Machine Learning",
+    year = 2012,
   }
 \end{filecontents}
 
@@ -335,5 +542,11 @@ Visited 4th of June 2017.
 
 \URL{https://keras.io}
 
+\pagebreak
+\section{Appendix C: Figure sources}
+\subsection{Figure \ref{fig:lstm}}
+Source: Wikipedia.org
+
+\URL{https://en.wikipedia.org/wiki/File:Peephole\_Long\_Short-Term\_Memory.svg}.
 
 \end{document}
