@@ -6,6 +6,9 @@
 \usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{filecontents}
+\usepackage[paper=a4paper]{geometry}
+
+\newgeometry{top=1in,right=1.5in,left=1.5in}
 
 \title{Comparing regression and LSTM sentiment analysis models}
 
@@ -14,10 +17,13 @@
 \date{\today}
 
 \begin{document}
+\begin{titlepage}
 \maketitle
 
 \tableofcontents
+\end{titlepage}
 
+\newgeometry{top=1in,bottom=1in,right=1.5in,left=1.5in}
 \pagebreak
 
 \section{Introduction}
@@ -31,7 +37,7 @@ ranging from translation to recommender systems to generic personal assistants
 \citep{COX2005, BKL2009}.
 
 As a part of this development, sentiment analysis has been attracting increased
-attention \citep{BKL2009, Jurafsky2000}.
+attention \citep{BKL2009, Jurafsky2000}. 
 %%%
 %%% TODO: Comment on why you chose linear + NN
 %%% Recent advancement in LSTM networks... Used in Google etc.
